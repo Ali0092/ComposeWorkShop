@@ -1,6 +1,7 @@
 package com.example.composeworkshop
 
 import android.annotation.SuppressLint
+import android.graphics.Paint.Align
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -11,16 +12,24 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseInBounce
+import androidx.compose.animation.core.EaseInElastic
+import androidx.compose.animation.core.EaseInOutCirc
 import androidx.compose.animation.core.EaseInOutElastic
+import androidx.compose.animation.core.EaseInOutQuint
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
@@ -44,6 +53,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -84,7 +94,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -112,13 +127,152 @@ class MainActivity : ComponentActivity() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    GenderSelectAnimation()
-//                    ScaleAndColorAnimation()
-//                    ColorAnimation()
+                    rotatingCircle()
                 }
             }
         }
     }
+}
+
+@Composable
+fun rotatingCircle(){
+
+    Box(
+        modifier = Modifier.wrapContentSize(),
+        contentAlignment = Alignment.Center
+    ) {
+
+        val infiniteTransition = rememberInfiniteTransition(label = "")
+
+        val angle1 by infiniteTransition.animateFloat(
+            initialValue = 0F,
+            targetValue = 360F,
+            animationSpec = infiniteRepeatable(
+                animation = tween(6000, easing = LinearEasing)
+            ), label = ""
+        )
+
+        val alpha1 by infiniteTransition.animateFloat(
+            initialValue = 0F,
+            targetValue = 1F,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1200, easing = LinearEasing),
+                repeatMode = RepeatMode.Reverse
+            ), label = ""
+        )
+
+        val stroke1 = Stroke(
+            width = 10f,
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(0f, 25f),0f),
+            cap = StrokeCap.Round
+        )
+
+        val angle2 by infiniteTransition.animateFloat(
+            initialValue = 360F,
+            targetValue = 0F,
+            animationSpec = infiniteRepeatable(
+                animation = tween(7000, easing = LinearEasing)
+            ), label = ""
+        )
+
+        val alpha2 by infiniteTransition.animateFloat(
+            initialValue = 1F,
+            targetValue = 0F,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1500, easing = LinearEasing),
+                repeatMode = RepeatMode.Reverse
+            ), label = ""
+        )
+
+        val stroke2 = Stroke(
+            width = 7f,
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(0f, 25f),0f),
+            cap = StrokeCap.Round
+        )
+
+        val angle3 by infiniteTransition.animateFloat(
+            initialValue = 0F,
+            targetValue = 360F,
+            animationSpec = infiniteRepeatable(
+                animation = tween(8000, easing = LinearEasing)
+            ), label = ""
+        )
+
+        val alpha3 by infiniteTransition.animateFloat(
+            initialValue = 1F,
+            targetValue = 0F,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1000, easing = LinearEasing),
+                repeatMode = RepeatMode.Reverse
+            ), label = ""
+        )
+
+        val stroke3 = Stroke(
+            width = 5f,
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(0f, 25f),0f),
+            cap = StrokeCap.Round
+        )
+
+
+        Canvas(
+            Modifier
+                .wrapContentSize()
+                .graphicsLayer {
+                    rotationZ = angle1
+                }){
+            //circle1
+            drawCircle(color = Color.Red, radius = 150f, style = stroke1, alpha = alpha1)
+        }
+        Canvas(
+            Modifier
+                .wrapContentSize()
+                .graphicsLayer {
+                    rotationZ = angle2
+                }){
+            //circle2
+            drawCircle(color = Color.Red, radius = 170f, style = stroke2, alpha = alpha2)
+        }
+
+        Canvas(
+            Modifier
+                .wrapContentSize()
+                .graphicsLayer {
+                    rotationZ = angle3
+                }){
+            //circle2
+            drawCircle(color = Color.Red, radius = 190f, style = stroke3, alpha = alpha3)
+        }
+
+        val size by infiniteTransition.animateFloat(
+            initialValue = 1F,
+            targetValue = 1.2F,
+            animationSpec = infiniteRepeatable(
+                animation = tween(2000, easing = EaseInBounce),
+                repeatMode = RepeatMode.Reverse
+            ), label = ""
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.male),
+            contentDescription = "Favourite Icon",
+            alignment = Alignment.Center,
+            contentScale = ContentScale.Crop,            // crop the image if it's not a square
+            modifier = Modifier
+                .size((120*size).dp)
+                .clip(CircleShape)                       // clip to the circle shape
+                .border(2.dp, Color.Black, CircleShape)
+//                .animateContentSize(
+//                    animationSpec = spring(
+//                        stiffness = Spring.StiffnessVeryLow,
+//                        dampingRatio = Spring.DampingRatioNoBouncy
+//                    )
+//                )
+        )
+
+
+
+    }
+
 }
 
 
@@ -126,7 +280,9 @@ class MainActivity : ComponentActivity() {
 fun GenderSelectAnimation() {
     val female = remember { mutableStateOf(true) }
     Row(horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(8.dp).fillMaxWidth(),
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -135,7 +291,8 @@ fun GenderSelectAnimation() {
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(animateDpAsState(if (female.value) 100.dp else 250.dp).value)
-                .border(width = animateDpAsState(if (female.value) 0.dp else 4.dp).value,
+                .border(
+                    width = animateDpAsState(if (female.value) 0.dp else 4.dp).value,
                     color = animateColorAsState(if (female.value) Color.Transparent else Color.Red).value
                 )
                 .padding(8.dp)
@@ -148,8 +305,10 @@ fun GenderSelectAnimation() {
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(animateDpAsState(if (!female.value) 100.dp else 250.dp).value)
-                .border(width = animateDpAsState(if (!female.value) 0.dp else 4.dp).value,
-                    color = animateColorAsState(if (!female.value) Color.Transparent else Color.Red).value)
+                .border(
+                    width = animateDpAsState(if (!female.value) 0.dp else 4.dp).value,
+                    color = animateColorAsState(if (!female.value) Color.Transparent else Color.Red).value
+                )
                 .padding(8.dp)
                 .clickable { female.value = !female.value }
                 .clip(RoundedCornerShape(animateDpAsState(if (!female.value) 0.dp else 8.dp).value))
@@ -182,14 +341,6 @@ fun ScaleAndColorAnimation() {
 
 
 
-
-
-
-
-
-
-
-
 @Composable
 fun ColorAnimation() {
     val enabled = remember { mutableStateOf(true) }
@@ -201,12 +352,13 @@ fun ColorAnimation() {
     Button(
         onClick = { enabled.value = !enabled.value },
         colors = ButtonDefaults.buttonColors(containerColor = color),
-        modifier = Modifier.padding(16.dp).fillMaxWidth()
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
     ) {
         Text("Color Animation")
     }
 }
-
 
 
 
@@ -217,11 +369,12 @@ fun HeartBeatDemo() {
     val animColor = remember { Animatable(initialValue = Color.Red) }
 
 
+
     LaunchedEffect(animScale) {
         animScale.animateTo(
-            targetValue = 2.5f,
+            targetValue = 1.1f,
             animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = 1000, easing = EaseInBounce, delayMillis = 1200),
+                animation = tween(durationMillis = 2000, easing = EaseInOutQuint, delayMillis = 2),
                 repeatMode = RepeatMode.Reverse
             )
         )
@@ -236,14 +389,16 @@ fun HeartBeatDemo() {
         )
     }
 
+//    Image(imageVector = Icons.Default.Favorite,
+//        contentDescription = "Favourite Icon",
+//        modifier = Modifier
+//            .size((60 * animScale.value).dp)
+//            .padding(10.dp),
+//        colorFilter = ColorFilter.tint(animColor.value)
+//    )
 
-    Image(imageVector = Icons.Default.Favorite,
-        contentDescription = "Favourite Icon",
-        modifier = Modifier
-            .size((60 * animScale.value).dp)
-            .padding(10.dp),
-        colorFilter = ColorFilter.tint(animColor.value)
-    )
+
+
 
 }
 
