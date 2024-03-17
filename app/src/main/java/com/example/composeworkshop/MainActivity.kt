@@ -13,12 +13,15 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseInBounce
 import androidx.compose.animation.core.EaseInElastic
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.EaseInOutBounce
 import androidx.compose.animation.core.EaseInOutCirc
 import androidx.compose.animation.core.EaseInOutElastic
 import androidx.compose.animation.core.EaseInOutQuint
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -127,7 +130,7 @@ class MainActivity : ComponentActivity() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    rotatingCircle()
+                    InstaCallingAnimation()
                 }
             }
         }
@@ -135,7 +138,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun rotatingCircle(){
+fun InstaCallingAnimation(){
 
     Box(
         modifier = Modifier.wrapContentSize(),
@@ -245,9 +248,9 @@ fun rotatingCircle(){
 
         val size by infiniteTransition.animateFloat(
             initialValue = 1F,
-            targetValue = 1.2F,
+            targetValue = 1.1F,
             animationSpec = infiniteRepeatable(
-                animation = tween(2000, easing = EaseInBounce),
+                animation = tween(1000, easing = LinearOutSlowInEasing),
                 repeatMode = RepeatMode.Reverse
             ), label = ""
         )
@@ -261,12 +264,6 @@ fun rotatingCircle(){
                 .size((120*size).dp)
                 .clip(CircleShape)                       // clip to the circle shape
                 .border(2.dp, Color.Black, CircleShape)
-//                .animateContentSize(
-//                    animationSpec = spring(
-//                        stiffness = Spring.StiffnessVeryLow,
-//                        dampingRatio = Spring.DampingRatioNoBouncy
-//                    )
-//                )
         )
 
 
